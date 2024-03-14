@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Enviar Dados para a API</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f8f9fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 500px;
+            margin: 50px auto;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+        }
+        
+        h1 {
+            text-align: center;
+            color: #007bff;
+        }
+        
+        form {
+            display: flex;
+            flex-direction: column;
+        }
+        
+        label {
+            margin-bottom: 10px;
+            color: #555;
+            font-weight: bold;
+        }
+        
+        input[type="checkbox"] {
+            margin-bottom: 20px;
+            margin-left: 5px;
+        }
+        
+        input[type="number"] {
+            margin-bottom: 20px;
+            padding: 8px;
+            border-radius: 4px;
+            border: 1px solid #ccc;
+        }
+        
+        button[type="submit"] {
+            padding: 10px 20px;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            transition: background-color 0.3s ease;
+            align-self: center;
+            width: 50%;
+        }
+        
+        button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+        
+        button[type="submit"]:focus {
+            outline: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>Enviar Dados para a API</h1>
+        <form id="dataForm">
+            <label for="sensor">Sensor:</label>
+            <input type="checkbox" id="sensor" name="Sensor">
+
+            <label for="botao">Botão:</label>
+            <input type="checkbox" id="botao" name="Botao">
+
+            <label for="ligaRobo">Ligar Robô:</label>
+            <input type="checkbox" id="ligaRobo" name="LigaRobo">
+
+            <label for="resetContador">Resetar Contador:</label>
+            <input type="checkbox" id="resetContador" name="ResetContador">
+
+            <label for="valorContagem">Valor da Contagem:</label>
+            <input type="number" id="valorContagem" name="ValorContagem" min="0"><br>
+
+            <button type="submit">Enviar</button>
+        </form>
+    </div>
+
+    <script>
+        document.getElementById("dataForm").addEventListener("submit", function(event){
+            event.preventDefault();
+
+            const formData = {
+                Sensor: document.getElementById("sensor").checked,
+                Botao: document.getElementById("botao").checked,
+                LigaRobo: document.getElementById("ligaRobo").checked,
+                ResetContador: document.getElementById("resetContador").checked,
+                ValorContagem: parseInt(document.getElementById("valorContagem").value)
+            };
+
+            fetch('http://localhost:8000/receive-data/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(formData)
+            })
+            .then(response => response.json())
+            .then(data => {
+                alert("Dados enviados com sucesso!");
+                console.log(data);
+            })
+            .catch(error => {
+                alert("Ocorreu um erro ao enviar os dados.");
+                console.error(error);
+            });
+        });
+    </script>
+</body>
+</html>
